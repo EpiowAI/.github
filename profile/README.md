@@ -8,9 +8,9 @@
 
 **Next-generation AI solutions that transform businesses into autonomous, intelligent enterprises**
 
-[![Website](https://img.shields.io/badge/🌐_Website-epiow.com-a855f7?style=for-the-badge)](https://epiow.com)
-[![Email](https://img.shields.io/badge/📧_Contact-contact@epiow.com-06b6d4?style=for-the-badge)](mailto:contact@epiow.com)
-[![Location](https://img.shields.io/badge/📍_Location-United_Kingdom-ec4899?style=for-the-badge)](https://epiow.com)
+[![Website](https://img.shields.io/badge/🌐_Website-eipox.com-a855f7?style=for-the-badge)](https://eipox.com)
+[![Email](https://img.shields.io/badge/📧_Contact-contact@eipox.com-06b6d4?style=for-the-badge)](mailto:contact@eipox.com)
+[![Location](https://img.shields.io/badge/📍_Location-United_Kingdom-ec4899?style=for-the-badge)](https://eipox.com)
 
 </div>
 
@@ -212,8 +212,8 @@ We're always looking to collaborate with forward-thinking organizations ready to
 
 ### Get In Touch
 
-[![Email Us](https://img.shields.io/badge/Email-contact@epiow.com-a855f7?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@epiow.com)
-[![Visit Website](https://img.shields.io/badge/Website-epiow.com-06b6d4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://epiow.com)
+[![Email Us](https://img.shields.io/badge/Email-contact@eipox.com-a855f7?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@eipox.com)
+[![Visit Website](https://img.shields.io/badge/Website-eipox.com-06b6d4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://eipox.com)
 
 ### Follow Our Journey
 
