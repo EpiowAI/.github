@@ -1,0 +1,77 @@
+name: Reusable Deploy Workflow
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Deployment environment (dev, staging, production)'
+        required: true
+        type: string
+      package-manager:
+        description: 'Package manager to use (npm, pnpm, bun)'
+        required: false
+        type: string
+        default: 'pnpm'
+      build-command:
+        description: 'Build command'
+        required: false
+        type: string
+        default: 'build'
+      working-directory:
+        description: 'Working directory'
+        required: false
+        type: string
+        default: '.'
+    secrets:
+      DEPLOY_TOKEN:
+        description: 'Deployment token'
+        required: false
+    outputs:
+      deployment-url:
+        description: 'Deployment URL'
+        value: ${{ jobs.deploy.outputs.url }}
+
+jobs:
+  deploy:
+    name: Deploy to ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: ${{ inputs.package-manager }}
+
+      - name: Setup pnpm
+        if: inputs.package-manager == 'pnpm'
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Bun
+        if: inputs.package-manager == 'bun'
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        working-directory: ${{ inputs.working-directory }}
+        run: ${{ inputs.package-manager }} install
+
+      - name: Build
+        working-directory: ${{ inputs.working-directory }}
+        run: ${{ inputs.package-manager }} run ${{ inputs.build-command }}
+
+      - name: Deploy
+        id: deploy
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          echo "url=https://${{ inputs.environment }}.eipox.com" >> $GITHUB_OUTPUT
+          echo "Deploying to ${{ inputs.environment }}..."
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}

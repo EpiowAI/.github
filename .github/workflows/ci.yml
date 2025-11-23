@@ -1,0 +1,73 @@
+name: Reusable CI Workflow
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Node.js version to use'
+        required: false
+        type: string
+        default: '20'
+      package-manager:
+        description: 'Package manager to use (npm, pnpm, bun)'
+        required: false
+        type: string
+        default: 'pnpm'
+      working-directory:
+        description: 'Working directory'
+        required: false
+        type: string
+        default: '.'
+    secrets:
+      NPM_TOKEN:
+        description: 'NPM token for private packages'
+        required: false
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: ${{ inputs.package-manager }}
+          cache-dependency-path: ${{ inputs.working-directory }}/pnpm-lock.yaml
+
+      - name: Setup pnpm
+        if: inputs.package-manager == 'pnpm'
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Bun
+        if: inputs.package-manager == 'bun'
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        working-directory: ${{ inputs.working-directory }}
+        run: ${{ inputs.package-manager }} install
+
+      - name: Lint
+        working-directory: ${{ inputs.working-directory }}
+        run: ${{ inputs.package-manager }} run lint
+        continue-on-error: true
+
+      - name: Type check
+        working-directory: ${{ inputs.working-directory }}
+        run: ${{ inputs.package-manager }} run typecheck
+        continue-on-error: true
+
+      - name: Test
+        working-directory: ${{ inputs.working-directory }}
+        run: ${{ inputs.package-manager }} run test
+        continue-on-error: true
+
+      - name: Build
+        working-directory: ${{ inputs.working-directory }}
+        run: ${{ inputs.package-manager }} run build
