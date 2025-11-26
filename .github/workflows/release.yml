@@ -1,87 +1,37 @@
-name: Reusable Release Workflow
+name: Release
 
 on:
   workflow_call:
     inputs:
-      package-manager:
-        description: 'Package manager to use (npm, pnpm, bun)'
-        required: false
+      build-command:
+        description: 'Build command (empty = skip)'
         type: string
-        default: 'pnpm'
-      release-type:
-        description: 'Release type (changesets, semantic-release)'
-        required: false
-        type: string
-        default: 'changesets'
+        default: ''
       working-directory:
         description: 'Working directory'
-        required: false
         type: string
         default: '.'
     secrets:
       NPM_TOKEN:
-        description: 'NPM token for publishing'
         required: true
-      GITHUB_TOKEN:
-        description: 'GitHub token'
-        required: true
+      SLACK_WEBHOOK:
+        required: false
 
 jobs:
   release:
-    name: Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-      id-token: write
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: SylphxAI/actions/publish@v1
         with:
-          node-version: '20'
-          cache: ${{ inputs.package-manager }}
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Setup pnpm
-        if: inputs.package-manager == 'pnpm'
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
-      - name: Setup Bun
-        if: inputs.package-manager == 'bun'
-        uses: oven-sh/setup-bun@v1
-
-      - name: Install dependencies
-        working-directory: ${{ inputs.working-directory }}
-        run: ${{ inputs.package-manager }} install
-
-      - name: Build
-        working-directory: ${{ inputs.working-directory }}
-        run: ${{ inputs.package-manager }} run build
-
-      - name: Create Release (Changesets)
-        if: inputs.release-type == 'changesets'
-        uses: changesets/action@v1
-        with:
-          publish: ${{ inputs.package-manager }} run release
-          commit: 'chore: release packages'
-          title: 'chore: release packages'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Create Release (Semantic Release)
-        if: inputs.release-type == 'semantic-release'
-        working-directory: ${{ inputs.working-directory }}
-        run: npx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm-token: ${{ secrets.NPM_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+          build-command: ${{ inputs.build-command }}
+          working-directory: ${{ inputs.working-directory }}
