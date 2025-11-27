@@ -28,10 +28,36 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: SylphxAI/actions/publish@v1
-        with:
-          npm-token: ${{ secrets.NPM_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
-          build-command: ${{ inputs.build-command }}
-          working-directory: ${{ inputs.working-directory }}
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+        working-directory: ${{ inputs.working-directory }}
+
+      - name: Build (if specified)
+        if: inputs.build-command != ''
+        run: ${{ inputs.build-command }}
+        working-directory: ${{ inputs.working-directory }}
+
+      - name: Run bump release
+        run: bunx @sylphx/bump release
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Notify Slack
+        if: always()
+        run: |
+          [ -z "$SLACK_WEBHOOK" ] && exit 0
+          STATUS="${{ job.status }}"
+          if [ "$STATUS" = "success" ]; then
+            EMOJI="✅"
+          else
+            EMOJI="❌"
+          fi
+          curl -X POST "$SLACK_WEBHOOK" \
+            -H 'Content-type: application/json' \
+            -d "{\"text\":\"$EMOJI Release workflow $STATUS for ${{ github.repository }}\"}" || true
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
