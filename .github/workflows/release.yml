@@ -19,7 +19,7 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: epiow-linux-standard
     permissions:
       contents: write
       pull-requests: write
