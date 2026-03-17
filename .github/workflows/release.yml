@@ -19,7 +19,7 @@ on:
 
 jobs:
   release:
-    runs-on: epiow-linux-standard
+    runs-on: sylphx-linux-standard
     permissions:
       contents: write
       pull-requests: write
