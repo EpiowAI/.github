@@ -34,7 +34,7 @@ on:
 jobs:
   deploy:
     name: Deploy to ${{ inputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: epiow-linux-standard
     environment: ${{ inputs.environment }}
     outputs:
       url: ${{ steps.deploy.outputs.url }}
