@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "repo": "EpiowAI/.github",
+    "name": "EpiowAI Organization Tooling",
+    "lifecycle": "production",
+    "layer": "tooling",
+    "summary": "Organization-level GitHub profile, community files, agent adapters, and reusable workflow surfaces for EpiowAI repositories.",
+    "goals": [
+      "Publish EpiowAI organization profile and community entry points.",
+      "Provide EpiowAI-owned issue templates, pull request template, and reusable GitHub Actions workflows.",
+      "Expose local agent adapter surfaces without forking enterprise doctrine."
+    ],
+    "nonGoals": [
+      "Own EpiowAI product application code or customer-facing runtime behavior.",
+      "Own enterprise engineering doctrine, standards, or project manifest schema.",
+      "Own EpiowAI dependency-update relay policy."
+    ]
+  },
+  "boundaries": {
+    "owns": [
+      {
+        "name": "organization-github-surfaces",
+        "description": "EpiowAI organization profile, community templates, reusable workflows, and local agent adapter files."
+      }
+    ],
+    "doesNotOwn": [
+      "Product-specific application behavior owned by each EpiowAI product repository.",
+      "Enterprise doctrine and manifest schema owned by SylphxAI/doctrine.",
+      "Organization Renovate relay policy owned by EpiowAI/renovate-config."
+    ],
+    "publicSurfaces": [
+      {
+        "type": "documentation",
+        "name": "Organization profile",
+        "location": "profile/README.md"
+      },
+      {
+        "type": "documentation",
+        "name": "Issue templates",
+        "location": ".github/ISSUE_TEMPLATE/"
+      },
+      {
+        "type": "documentation",
+        "name": "Pull request template",
+        "location": ".github/PULL_REQUEST_TEMPLATE.md"
+      },
+      {
+        "type": "workflow",
+        "name": "Reusable CI workflow",
+        "location": ".github/workflows/ci.yml"
+      },
+      {
+        "type": "workflow",
+        "name": "Reusable deploy workflow",
+        "location": ".github/workflows/deploy.yml"
+      },
+      {
+        "type": "workflow",
+        "name": "Reusable release workflow",
+        "location": ".github/workflows/release.yml"
+      },
+      {
+        "type": "documentation",
+        "name": "Claude agent adapters",
+        "location": ".claude/"
+      }
+    ],
+    "allowedDependencies": [
+      {
+        "repo": "SylphxAI/doctrine",
+        "surface": "project manifest schema and engineering doctrine",
+        "direction": "peer-public"
+      }
+    ],
+    "forbiddenCouplings": [
+      "Do not hardcode product-specific behavior into organization-wide templates or workflows.",
+      "Do not fork doctrine standards into this repository; link to SylphxAI/doctrine.",
+      "Do not make product repositories depend on private files outside the listed public surfaces."
+    ]
+  },
+  "documentation": {
+    "adr": {
+      "path": "docs/adr/",
+      "status": "planned"
+    },
+    "specs": {
+      "path": "docs/specs/",
+      "status": "planned"
+    },
+    "catalog": {
+      "path": ".doctrine/project.json",
+      "status": "present"
+    },
+    "runbooks": {
+      "path": "docs/runbooks/",
+      "status": "planned"
+    },
+    "generatedReferences": {
+      "path": ".github/workflows/README.md",
+      "status": "present"
+    }
+  },
+  "delivery": {
+    "ciModel": "none",
+    "requiredContexts": [],
+    "deployPath": "not-applicable: organization profile, templates, and reusable workflows are served directly from GitHub after merge to main.",
+    "productionProof": "GitHub main readback plus doctrine project-control audit; reusable workflow behavior is proven by downstream consumer workflow runs.",
+    "recoveryClass": "source-revertable"
+  },
+  "adoption": {
+    "status": "baseline",
+    "gaps": [
+      {
+        "id": "legacy-contributing-branch-policy",
+        "description": "CONTRIBUTING.md still describes a dev-branch, human approval, and build-check flow that does not match current no-human doctrine or main branch protection readback.",
+        "owner": "EpiowAI/.github",
+        "target": "Open a follow-up docs/process PR after manifest rollout."
+      },
+      {
+        "id": "workflow-readme-origin-drift",
+        "description": ".github/workflows/README.md still uses SylphxAI wording/examples; decide whether EpiowAI owns standalone reusable workflows or delegates examples to SylphxAI/.github.",
+        "owner": "EpiowAI/.github",
+        "target": "Open a follow-up workflow-doc freshness PR after manifest rollout."
+      }
+    ]
+  }
+}
