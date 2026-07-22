@@ -1,11 +1,20 @@
-# Agent Instructions
+# EpiowAI/.github — local agent notes only
 
-This repository consumes the Sylphx engineering doctrine from [SylphxAI/doctrine](https://github.com/SylphxAI/doctrine).
+Static engineering and delivery standards load from the active Skills runtime
+([SylphxAI/skills](https://github.com/SylphxAI/skills) is binding instruction
+SSOT). Doctrine and Mission Control are retired historical lineage and must not
+be loaded as current instruction authority.
 
-Before changing files here:
+Local truth: [PROJECT.md](./PROJECT.md) and the org-level GitHub facts in this
+repository. Keep enterprise policy in Skills; this repo should contain only
+EpiowAI organization-level GitHub facts and runtime adapter surfaces.
 
-- Read [PROJECT.md](./PROJECT.md) and [`.doctrine/project.json`](./.doctrine/project.json) for this repository's goal, lifecycle, boundary, public surfaces, and adoption gaps.
-- Read `SylphxAI/doctrine` `AGENTS.md`, `PRINCIPLES.md`, and `ADR.md`, then load any triggered standards.
-- Keep enterprise policy in `SylphxAI/doctrine`; this repo should contain only EpiowAI organization-level GitHub facts and runtime adapter surfaces.
+Do not add product-specific behavior here. Product behavior belongs in the
+owning product repository and must consume this repository only through the
+public surfaces listed in the local project declaration.
 
-Do not add product-specific behavior here. Product behavior belongs in the owning product repository and must consume this repository only through the public surfaces listed in the manifest.
+## Local rules
+
+- Prefer the narrowest affected check before full workspace runs.
+- Report layers honestly: source · CI · merge · deploy · live proof (do not collapse).
+- Never commit secrets, tokens, or private keys.
