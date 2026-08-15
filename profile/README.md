@@ -7,7 +7,7 @@
 
 <p align="center">
   <b>Organization OS · Hong Kong–first enterprise workspace</b><br/>
-  Modular HR · CRM · Ops — Employment Ordinance &amp; MPF-native
+  Workforce · CRM · Ops — Employment Ordinance &amp; MPF-native
 </p>
 
 <p align="center">
@@ -29,7 +29,7 @@
 | | |
 |--|--|
 | **Platform OS** | Single workspace · modular app catalog · shared identity |
-| **CareOps / HR** | Leave · attendance · payroll · MPF / ORSO paths |
+| **Workforce operations** | Leave · attendance · payroll · MPF / ORSO paths |
 | **CRM & ops** | Role-based apps across the organization |
 | **Intelligence** | Cross-app capability — structure first, not theatre |
 
