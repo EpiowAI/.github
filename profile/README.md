@@ -3,7 +3,7 @@
   Product dest: https://github.com/EpiowAI/epiow/blob/main/docs/vision.md
 -->
 
-<img src="https://capsule-render.vercel.app/api?type=blur&height=220&color=0:4338CA,50:5B5BD6,100:7C3AED&text=Epiow&fontSize=54&fontColor=ffffff&animation=twinkling&desc=AI-native%20Collaboration%20Web%20OS&descSize=18&descAlignY=62&fontAlignY=42" width="100%" alt="Epiow"/>
+<img src="https://mark.sylphx.com/api/v1/mark/hero.svg?type=aurora&text=Epiow&desc=The%20Workspace%20OS&height=220&color=0:4338CA,50:5B5BD6,100:7C3AED" width="100%" alt="Epiow"/>
 
 <p align="center">
   <b>AI-native Collaboration Web OS · Sylphx Platform</b><br/>
@@ -11,13 +11,13 @@
 </p>
 
 <p align="center">
-  <a href="https://epiow.com"><img src="https://img.shields.io/badge/Live-epiow.com-4338CA?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live"/></a>
-  <a href="https://github.com/EpiowAI/epiow/blob/main/docs/vision.md"><img src="https://img.shields.io/badge/Dest-vision.md-5B5BD6?style=for-the-badge" alt="Dest"/></a>
-  <a href="https://github.com/EpiowAI/epiow"><img src="https://img.shields.io/badge/Product-epiow-7C3AED?style=for-the-badge&logo=github" alt="Product"/></a>
+  <a href="https://epiow.com"><img src="https://mark.sylphx.com/badge/Live-epiow.com-4338CA?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live"/></a>
+  <a href="https://github.com/EpiowAI/epiow/blob/main/docs/vision.md"><img src="https://mark.sylphx.com/badge/Dest-vision.md-5B5BD6?style=for-the-badge" alt="Dest"/></a>
+  <a href="https://github.com/EpiowAI/epiow"><img src="https://mark.sylphx.com/badge/Product-epiow-7C3AED?style=for-the-badge&logo=github" alt="Product"/></a>
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Inter&weight=600&size=17&pause=1400&color=A5B4FC&center=true&vCenter=true&width=620&lines=One+tenant.+Manifest+apps.;Pay+and+Leave+as+live+apps.;Not+a+CRM+or+ERP+suite." alt="typing"/>
+  <img src="https://mark.sylphx.com/?font=Inter&weight=600&size=17&pause=1400&color=A5B4FC&center=true&vCenter=true&width=620&lines=One+tenant.+Manifest+apps.;Pay+and+Leave+as+live+apps.;Not+a+CRM+or+ERP+suite." alt="typing"/>
 </p>
 
 ---
@@ -73,4 +73,4 @@ Rust kernel · Next.js Shell · Sylphx Platform
 
 </div>
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:4338CA,100:7C3AED&height=100&section=footer" width="100%" alt="footer"/>
+<img src="https://mark.sylphx.com/api?type=waving&color=0:4338CA,100:7C3AED&height=100&section=footer" width="100%" alt="footer"/>
