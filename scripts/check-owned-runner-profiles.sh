@@ -9,8 +9,8 @@
 # - A public repository may also use GitHub's free standard hosted runners
 #   (`<os>-latest` and `<os>-<major.minor>`: ubuntu, windows, macos).
 # - GitHub's larger and GPU hosted runners are billed even for public
-#   repositories, so they always fail, as does the retired
-#   `[self-hosted, ...]` label list.
+#   repositories, so they always fail, as does every `[self-hosted, ...]`
+#   label list except our own macOS list.
 #
 # REPO_PRIVATE is `github.event.repository.private` from the workflow. Any
 # value other than `false` counts as private, so a missing value fails closed.
@@ -29,6 +29,9 @@ workflow_dir = root / ".github" / "workflows"
 
 selection = re.compile(r"^\s*runs-on\s*:\s*(?P<value>.*?)(?:\s+#.*)?$")
 owned = re.compile(r"^sylphx-linux-(?:standard|large|xlarge|2xlarge)$")
+owned_macos_array = re.compile(
+    r"^\[\s*self-hosted\s*,\s*sylphx\s*,\s*macos\s*,\s*(?:nano|small|standard|large|xlarge|2xlarge)\s*\]$"
+)
 hosted = re.compile(r"^(?:ubuntu|windows|macos)-", re.I)
 standard_hosted = re.compile(r"^(?:ubuntu|windows|macos)-(?:latest|\d+(?:\.\d+)?)$", re.I)
 larger_or_gpu = re.compile(r"-xl\b|large|gpu|-\d+-core\b", re.I)
@@ -41,8 +44,13 @@ def reason_for(value, is_private):
     """The violation for one `runs-on` value, or None when it is allowed."""
     if "${{" in value:
         return "dynamic runner selection"
+    if owned_macos_array.fullmatch(value):
+        return None
     if label_list.match(value):
-        return "retired [self-hosted, ...] label list; use the bare Sylphx runner label"
+        return (
+            "not an owned label list; the only owned list is "
+            "[self-hosted, sylphx, macos, <class>], otherwise use the bare Sylphx runner label"
+        )
     if owned.fullmatch(value):
         return None
     if larger_or_gpu.search(value):
@@ -76,7 +84,11 @@ def self_test():
         ("public + owned runner", "sylphx-linux-standard", False, False),
         ("public + larger hosted", "ubuntu-24.04-8-core", False, True),
         ("public + GPU hosted", "gpu_1x_a10", False, True),
+        ("private + owned macOS list", "[self-hosted, sylphx, macos, standard]", True, False),
+        ("public + owned macOS list", "[self-hosted, sylphx, macos, standard]", False, False),
+        ("private + retired Linux list", "[self-hosted, sylphx-linux-standard]", True, True),
         ("self-hosted label list", "[self-hosted, sylphx-linux-standard]", False, True),
+        ("unowned macOS list", "[self-hosted, sylphx, macos, huge]", False, True),
         ("dynamic selection", "${{ matrix.runner }}", False, True),
         ("unknown label", "custom-runner-group", False, True),
     )
