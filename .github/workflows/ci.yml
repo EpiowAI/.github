@@ -1,10 +1,12 @@
+# CI for this repository's own surfaces: the reusable workflows and actions it
+# serves to the organization. It is the repository's gate on pull requests and
+# merge groups and its own check on main.
+#
+# Consumers do not call this file. They call one reusable workflow per surface
+# (chat-senders.yml, release.yml, deploy.yml). That surface is the pinned
+# commit, so a change to this file, or to any workflow but the one they use,
+# reaches nobody until they adopt it.
 name: CI
-
-# Fast Trunk (Agent-native):
-# - Aggregate source verdict: source-ci/pass
-# - CI = source correctness only; Platform builds production once
-# - Merge Queue off by default (no merge_group trigger)
-# - Concurrency cancels superseded PR/branch tip runs
 
 on:
   merge_group:
@@ -13,18 +15,30 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+
 permissions:
   contents: read
+
 concurrency:
-  # Fast Trunk: supersede obsolete runs for the same PR or branch tip.
+  # A superseded pull-request run stops; a merge-group or trunk run never does.
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.event.merge_group.head_sha || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  chat-senders:
+    name: chat-senders
+    uses: ./.github/workflows/chat-senders.yml
+
   structure:
-    runs-on: sylphx-linux-standard
+    name: structure
+    # The runner contract keeps this repository's own jobs free: GitHub's
+    # standard hosted runners are free on a public repository, and a private
+    # one runs on our own runners (scripts/check-owned-runner-profiles.sh).
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Verify static owned runner profiles
         env:
           REPO_PRIVATE: ${{ github.event.repository.private }}
@@ -36,3 +50,21 @@ jobs:
           ls .github/workflows
           # reusable org workflows are templates/support, not product runtime
           echo "EpiowAI/.github structure gate ok"
+
+  ci-ok:
+    name: ci-ok
+    # The verdict runs whenever a lane stopped, so it never reads green over a
+    # failure; a superseded pull-request run does not post beside its replacement.
+    if: always() && !cancelled()
+    needs: [chat-senders, structure]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: SylphxAI/.github/.github/actions/needs-pass@b3ed85a5eff7c60ec0796365a7b5d0051976df5c
+        with:
+          needs: ${{ toJSON(needs) }}
+          # The work itself, not the verdict: a skipped lane would still pass.
+          required: structure
+          # chat-senders is a reusable-workflow call: on a merge group the queue
+          # should run it, so a skipped lane there is a failure, not a pass.
+          required-unless-merge-group: chat-senders
