@@ -1,0 +1,43 @@
+# Reusable check: a change that adds a direct chat-API host outside the
+# action's allow-list fails. Chat messages go through Notify
+# (SylphxAI/cloud docs/adr/ADR-01M495XFM4158579XRYVC92M6S-notify-chat-channel.md);
+# the allow-list is owned by the action, so a consumer pins it and never
+# maintains a copy here.
+#
+# A consumer calls this from its own workflow, beside the jobs it aggregates
+# (the readme in ./README.md shows the caller):
+#
+#   jobs:
+#     chat-senders:
+#       uses: EpiowAI/.github/.github/workflows/chat-senders.yml@<sha>
+#
+# It is a separate workflow on purpose. A reusable workflow cannot be pinned
+# only for one of its jobs, and a consumer that pinned the whole of ci.yml
+# would stop receiving changes to every other job in it.
+name: Chat senders
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  chat-senders:
+    name: chat-senders
+    # GitHub's standard hosted runners are free on a public repository (this
+    # one), and this job only reads the diff: no repository-owned runner seat
+    # is spend on it.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # The action diffs the change's added lines, so it needs the base
+          # commit; a shallow checkout has no merge base to compare with.
+          fetch-depth: 0
+      - name: Added lines send chat through Notify
+        uses: SylphxAI/.github/.github/actions/chat-senders@5cfd55a41435cca8e4b7caf6506faf04ca08d200
+        with:
+          mode: fail
