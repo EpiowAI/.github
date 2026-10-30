@@ -55,16 +55,15 @@ jobs:
     name: ci-ok
     # The verdict runs whenever a lane stopped, so it never reads green over a
     # failure; a superseded pull-request run does not post beside its replacement.
-    if: always() && !cancelled()
+    if: always()
     needs: [chat-senders, structure]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: SylphxAI/.github/.github/actions/needs-pass@b3ed85a5eff7c60ec0796365a7b5d0051976df5c
+      - uses: SylphxAI/.github/.github/actions/needs-pass@96195d86b550ab1205159acb1ae0d75b1fbed47f
         with:
           needs: ${{ toJSON(needs) }}
+          required: chat-senders,structure
           # The work itself, not the verdict: a skipped lane would still pass.
-          required: structure
           # chat-senders is a reusable-workflow call: on a merge group the queue
           # should run it, so a skipped lane there is a failure, not a pass.
-          required-unless-merge-group: chat-senders
